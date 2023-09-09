@@ -1,8 +1,11 @@
+import os
 import requests
 import json
+from dotenv import load_dotenv
 
+load_dotenv()
 
-url = "https://weatherapi-com.p.rapidapi.com/forecast.json"
+url = os.getenv('URL')
 
 querystring = {"q":"Hanoi","days":"3"}
 
