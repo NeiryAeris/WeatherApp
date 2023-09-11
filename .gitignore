@@ -1,3 +1,5 @@
 #ignore env file that contains API keys
 OpenWeather/.env
 WeatherAPI/.env
+OpenWeather/tst.py
+OpenWeather/data.json
