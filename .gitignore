@@ -3,3 +3,4 @@ OpenWeather/.env
 WeatherAPI/.env
 OpenWeather/tst.py
 OpenWeather/data.json
+WeatherAPI/
