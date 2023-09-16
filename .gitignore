@@ -1,5 +1,4 @@
 #ignore env file that contains API keys
 OpenWeather/.env
-OpenWeather/tst.py
 OpenWeather/data.json
 TestingSite/*

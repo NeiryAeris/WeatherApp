@@ -2,16 +2,15 @@ import os
 import requests
 import json
 from dotenv import load_dotenv
-
+import tst
 load_dotenv()
+city_data = json.load(open('location.json'))
 
-lat = 21.0294498
-lon = 105.8544441
+lat = tst.lat
+lon = tst.lon
 
 API_KEY = os.getenv('API_KEY')
 API_URL = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&appid={API_KEY}"
-
-# city_data = json.load(open('CityLocation.json'))
 
 
 def city_data_call(lat, lon):
