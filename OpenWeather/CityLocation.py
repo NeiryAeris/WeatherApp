@@ -2,8 +2,11 @@ import os
 import requests
 import json
 from dotenv import load_dotenv
+# from geopy.geocoders import Nominatim
 
 load_dotenv()
+
+# loc = Nominatim(user_agent="GetLoc")
 
 cityname = "hanoi"
 limit = 1
