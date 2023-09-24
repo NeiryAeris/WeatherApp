@@ -12,6 +12,8 @@ lon = tst.lon
 API_KEY = os.getenv('API_KEY')
 API_URL = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&appid={API_KEY}"
 
+def icon_get(icon_id):
+    return f"http://openweathermap.org/img/w/{icon_id}.png"
 
 def city_data_call(lat, lon):
     return requests.get(API_URL)
