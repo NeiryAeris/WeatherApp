@@ -14,9 +14,10 @@ import json
 
 file_name = "testing_data.json"
 
+
 def read_data(file_name):
     try:
-        with open(file_name, 'r') as file:
+        with open(file_name, "r") as file:
             data = json.load(file)
         return data
     except FileNotFoundError:
@@ -25,21 +26,36 @@ def read_data(file_name):
         return f"An error occurred: {str(e)}"
 
 
+def display_daily_weather():
+    weather = read_data(file_name)
+    daily_weather = weather["daily"]
+    if daily_weather:
+        daily_text_box.delete(1.0, END)
+        for entry in daily_weather:
+            time = str(datetime.datetime.fromtimestamp(entry["dt"]))
+            daily_text_box.insert(
+                END,
+                f"{time[5:]}: {entry['temp']}°K, {entry['weather'][0]['description']}\n",
+            )
+    else:
+        daily_text_box.delete(1.0, END)
+        daily_text_box.insert(END, "File not found or invalid JSON data.")
+
+
 def display_hourly_weather():
-    # file_path = file_entry.get()
-    # weather = read_hourly_weather_data(file_path)
     weather = read_data(file_name)
     hourly_weather = weather["hourly"]
     if hourly_weather:
-        result_text.delete(1.0, END)
+        hourly_text_box.delete(1.0, END)
         for entry in hourly_weather:
-            result_text.insert(
+            time = str(datetime.datetime.fromtimestamp(entry["dt"]))
+            hourly_text_box.insert(
                 END,
-                f"{datetime.datetime.fromtimestamp(entry['dt'])}: {entry['temp']}°K, {entry['weather'][0]['description']}\n",
+                f"{time[5:]}: {entry['temp']}°K, {entry['weather'][0]['description']}\n",
             )
     else:
-        result_text.delete(1.0, END)
-        result_text.insert(END, "File not found or invalid JSON data.")
+        hourly_text_box.delete(1.0, END)
+        hourly_text_box.insert(END, "File not found or invalid JSON data.")
 
 
 def close_app():
@@ -54,6 +70,8 @@ def close_app():
 # Create the main application window
 app = Tk()
 app.title("Hourly Weather App")
+app.geometry("750x440")
+app.resizable(False, False)
 
 # Menu bar testing
 
@@ -99,14 +117,18 @@ file_label = Label(app, text="Display:")
 get_weather_button = Button(
     app, text="Display Hourly Weather", command=display_hourly_weather
 )
-result_text = Text(app, width=40, height=10)
+hourly_text_box = Text(app, width=45, height=10)
+daily_text_box = Text(app, width=45, height=10)
 
-# Place widgets on the window
-file_label.pack()
+# Place widgets on the window------------------
+# file_label.pack()
 # file_entry.pack()
-get_weather_button.pack()
-result_text.pack()
+# get_weather_button.pack()
+display_hourly_weather()
+display_daily_weather()
+daily_text_box.place(x=379, y=100)
+hourly_text_box.place(x=0, y=180)
 # result_text.grid(column=5)
 
-# Start the Tkinter main loop
+# Start the Tkinter main loop------------------
 app.mainloop()
