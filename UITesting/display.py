@@ -4,19 +4,31 @@ import datetime
 import json
 
 
-def read_hourly_weather_data(file_path):
+# def read_hourly_weather_data(file_path):
+#     try:
+#         with open(file_path, "r") as file:
+#             data = json.load(file)
+#         return data
+#     except FileNotFoundError:
+#         return None
+
+file_name = "testing_data.json"
+
+def read_data(file_name):
     try:
-        with open(file_path, "r") as file:
+        with open(file_name, 'r') as file:
             data = json.load(file)
         return data
     except FileNotFoundError:
-        return None
+        return f"File '{file_name}' not found."
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
 
 
 def display_hourly_weather():
-    file_path = file_entry.get()
+    # file_path = file_entry.get()
     # weather = read_hourly_weather_data(file_path)
-    weather = json.load(open("testing_data.json"))
+    weather = read_data(file_name)
     hourly_weather = weather["hourly"]
     if hourly_weather:
         result_text.delete(1.0, END)
@@ -82,8 +94,8 @@ footer_3 = Label(
 
 
 # Create widgets
-file_label = Label(app, text="Enter JSON File Path:")
-file_entry = Entry(app)
+file_label = Label(app, text="Display:")
+# file_entry = Entry(app)
 get_weather_button = Button(
     app, text="Display Hourly Weather", command=display_hourly_weather
 )
@@ -91,7 +103,7 @@ result_text = Text(app, width=40, height=10)
 
 # Place widgets on the window
 file_label.pack()
-file_entry.pack()
+# file_entry.pack()
 get_weather_button.pack()
 result_text.pack()
 # result_text.grid(column=5)
