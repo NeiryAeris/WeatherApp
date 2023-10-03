@@ -35,7 +35,7 @@ def display_daily_weather():
             time = str(datetime.datetime.fromtimestamp(entry["dt"]))
             daily_text_box.insert(
                 END,
-                f"{time[5:]}: {entry['temp']}°K, {entry['weather'][0]['description']}\n",
+                f"{time[5:]}: {entry['temp']['day']}°K, {entry['weather'][0]['description']}\n",
             )
     else:
         daily_text_box.delete(1.0, END)
@@ -118,7 +118,7 @@ get_weather_button = Button(
     app, text="Display Hourly Weather", command=display_hourly_weather
 )
 hourly_text_box = Text(app, width=45, height=10)
-daily_text_box = Text(app, width=45, height=10)
+daily_text_box = Text(app, width=45, height=8)
 
 # Place widgets on the window------------------
 # file_label.pack()
