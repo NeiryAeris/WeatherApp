@@ -29,8 +29,9 @@ def display_daily_weather():
             time = str(datetime.datetime.fromtimestamp(entry["dt"]))
             daily_text_box.insert(
                 END,
-                f"{time[5:]}: {entry['temp']}°K, {entry['weather'][0]['description']}\n",
+                f"{time[5:]}: {str(int(entry['temp']['day'] - 273.15))[:4]}°C, {entry['weather'][0]['description']}\n",
             )
+
     else:
         daily_text_box.delete(1.0, END)
         daily_text_box.insert(END, "File not found or invalid JSON data.")
@@ -45,7 +46,7 @@ def display_hourly_weather():
             time = str(datetime.datetime.fromtimestamp(entry["dt"]))
             hourly_text_box.insert(
                 END,
-                f"{time[5:]}: {entry['temp']}°K, {entry['weather'][0]['description']}\n",
+                f"{time[5:]}: {str(int(entry['temp'] - 273.15))[:4]}°C, {entry['weather'][0]['description']}\n",
             )
     else:
         hourly_text_box.delete(1.0, END)
@@ -98,31 +99,58 @@ submenu1.add_command(label="Exit", command=close_app)
 submenu1.add_command(label="Refresh")
 
 # Create widgets
-file_label = Label(app, text="Display:")
+daily_label = Label(app, text="Daily:")
+hourly_label = Label(app, text="Hourly:")
 # file_entry = Entry(app)
 icon_label = Label(app, image=PhotoImage(file="04d.png"))
 get_weather_button = Button(
     app, text="Display Hourly Weather", command=display_hourly_weather
 )
-hourly_text_box = Text(app, width=45, height=10)
-daily_text_box = Text(app, width=45, height=10)
+
+hourly_text_box = Text(app, width=40, height=5)
+daily_text_box = Text(app, width=40, height=5)
 result_label = Label(app, fg="red")
 
 box_img = ImageTk.PhotoImage(file="E:\Code\Python\Sketch\WeatherApp\Images\\box.png")
+base_img = ImageTk.PhotoImage(file="E:\Code\Python\Sketch\WeatherApp\Images\\base.png")
+weather_sector = Label(image=box_img, border=0)
+base_sector = Label(image=box_img,border=0)
 
-weather_sector1 = Label(image=box_img,border=0)
+frame = Frame(app,width=900, height=155,bg="#212120")
+
+weat_data = read_data(file_name)
+
+temperature = int(weat_data['current']['temp']) - 273.15
+temp = Label()
+
+feels_like = int(weat_data['current']['feels_like']) - 273.15
+feels = Label()
+
+humidity = weat_data['current']['humidity']
+humid = Label()
+
+description = weat_data['current']['weather'][0]['description']
+descript = Label()
+
+
 # Place widgets on the window------------------
-# file_label.pack()
+daily_label.place(x=398,y=80)
+daily_text_box.place(x=399, y=100)
+
+hourly_label.place(x=398,y=190)
+hourly_text_box.place(x=399, y=210)
 # file_entry.pack()
 # get_weather_button.pack()
 display_hourly_weather()
 display_daily_weather()
-daily_text_box.place(x=379, y=100)
-hourly_text_box.place(x=0, y=180)
+
+
 
 display_icon("10d")
-icon_label.pack()
-weather_sector1.place(x=45,y=250)
+# icon_label.pack()
+weather_sector.place(x=40, y=120)
+
+frame.pack(side='bottom')
 # result_text.grid(column=5)
 
 
