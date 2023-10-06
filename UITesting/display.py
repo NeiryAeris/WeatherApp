@@ -121,16 +121,20 @@ frame = Frame(app,width=900, height=155,bg="#212120")
 weat_data = read_data(file_name)
 
 temperature = int(weat_data['current']['temp']) - 273.15
-temp = Label()
+temp = Label(app, text=f"Temperature: {str(temperature)[:4]}°C",bg="#203243",fg='white',font='Helvetica')
+temp.place(x=42,y=130)
 
 feels_like = int(weat_data['current']['feels_like']) - 273.15
-feels = Label()
+feels = Label(app, text=f"Feels like: {str(feels_like)[:4]}°C",bg="#203243",fg='white',font='Helvetica')
+feels.place(x=42,y=150)
 
 humidity = weat_data['current']['humidity']
-humid = Label()
+humid = Label(app, text=f"Humidity: {humidity}%",bg="#203243",fg='white',font='Helvetica')
+humid.place(x=42,y=170)
 
 description = weat_data['current']['weather'][0]['description']
-descript = Label()
+descript = Label(app, text=f"Overall: {description}",bg="#203243",fg='white',font='Helvetica')
+descript.place(x=42,y=190)
 
 
 # Place widgets on the window------------------
