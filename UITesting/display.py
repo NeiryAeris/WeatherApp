@@ -1,9 +1,23 @@
 from tkinter import *
 import tkinter.messagebox
 import datetime
+import ctypes as ct
 import json
 
 file_name = "testing_data.json"
+
+def dark_title_bar(window):
+    """
+    MORE INFO:
+    https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute
+    """
+    window.update()
+    set_window_attribute = ct.windll.dwmapi.DwmSetWindowAttribute
+    get_parent = ct.windll.user32.GetParent
+    hwnd = get_parent(window.winfo_id())
+    value = 2
+    value = ct.c_int(value)
+    set_window_attribute(hwnd, 20, ct.byref(value),4)
 
 def fetch_today(file_name):
     weather = read_data(file_name)
@@ -64,7 +78,10 @@ app = Tk()
 app.title("Hourly Weather App")
 app.geometry("750x440")
 app.resizable(False, False)
-
+app.configure(background="#222246")
+dark_title_bar(app)
+# app.overrideredirect(True)
+ 
 # Menu bar testing
 
 menubar = Menu(app)
