@@ -40,7 +40,6 @@ def display_daily_weather():
 def display_hourly_weather():
     weather = read_data(file_name)
     hourly_weather = weather["hourly"]
-    today = fetch_today(file_name)
     if hourly_weather:
         hourly_text_box.delete(1.0, END)
         for entry in hourly_weather:
