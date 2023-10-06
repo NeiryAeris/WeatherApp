@@ -1,29 +1,14 @@
 from tkinter import *
 import tkinter.messagebox
 import datetime
-import ctypes as ct
 import json
+from io import BytesIO
+from PIL import Image, ImageTk
+import requests
 
 file_name = "testing_data.json"
 
-def dark_title_bar(window):
-    """
-    MORE INFO:
-    https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute
-    """
-    window.update()
-    set_window_attribute = ct.windll.dwmapi.DwmSetWindowAttribute
-    get_parent = ct.windll.user32.GetParent
-    hwnd = get_parent(window.winfo_id())
-    value = 2
-    value = ct.c_int(value)
-    set_window_attribute(hwnd, 20, ct.byref(value),4)
 
-def fetch_today(file_name):
-    weather = read_data(file_name)
-    unix_exchange = str(datetime.datetime.fromtimestamp(weather['current']['dt']))
-    return unix_exchange[9:11]
-    
 def read_data(file_name):
     try:
         with open(file_name, "r") as file:
@@ -42,7 +27,10 @@ def display_daily_weather():
         daily_text_box.delete(1.0, END)
         for entry in daily_weather:
             time = str(datetime.datetime.fromtimestamp(entry["dt"]))
-            daily_text_box.insert( END, f"{time[5:]}: {str(int(entry['temp']['day'])-273.15)[:4]}°C, {entry['weather'][0]['description']}\n",)
+            daily_text_box.insert(
+                END,
+                f"{time[5:]}: {str(int(entry['temp']['day'] - 273.15))[:4]}°C, {entry['weather'][0]['description']}\n",
+            )
 
     else:
         daily_text_box.delete(1.0, END)
@@ -57,11 +45,32 @@ def display_hourly_weather():
         hourly_text_box.delete(1.0, END)
         for entry in hourly_weather:
             time = str(datetime.datetime.fromtimestamp(entry["dt"]))
-            if time[9:11] == today:
-                hourly_text_box.insert(END,f"{time[5:]}: {str(int(entry['temp'])-273.15)[:4]}°C, {entry['weather'][0]['description']}\n",)
+            hourly_text_box.insert(
+                END,
+                f"{time[5:]}: {str(int(entry['temp'] - 273.15))[:4]}°C, {entry['weather'][0]['description']}\n",
+            )
     else:
         hourly_text_box.delete(1.0, END)
         hourly_text_box.insert(END, "File not found or invalid JSON data.")
+
+
+def display_icon(icon_id):
+    url = f"https://openweathermap.org/img/w/{icon_id}.png"
+    try:
+        response = requests.get(url)
+        icon_data = response.content
+        icon = Image.open(BytesIO(icon_data))
+        icon = icon.resize((60, 60))  # Adjust the size as needed
+        icon = ImageTk.PhotoImage(icon)
+
+        # Display the icon in a Label widget
+        icon_label.config(image=icon, bg="#57ADFF")
+        icon_label.image = icon  # Keep a reference to prevent garbage collection
+    except Exception as e:
+        error_img = ImageTk.PhotoImage(
+            file="E:\Code\Python\Sketch\WeatherApp\error.png"
+        )
+        icon_label.config(image=error_img)
 
 
 def close_app():
@@ -76,12 +85,10 @@ def close_app():
 # Create the main application window
 app = Tk()
 app.title("Hourly Weather App")
-app.geometry("750x440")
+app.geometry("890x470+300+300")
+app.configure(bg="#57ADFF")
 app.resizable(False, False)
-app.configure(background="#222246")
-dark_title_bar(app)
-# app.overrideredirect(True)
- 
+
 # Menu bar testing
 
 menubar = Menu(app)
@@ -92,57 +99,61 @@ menubar.add_cascade(label="App", menu=submenu1)
 submenu1.add_command(label="Exit", command=close_app)
 submenu1.add_command(label="Refresh")
 
-# temp output and label
-
-temp_high = Label(text="Temp(high) :", width=20, font=("bold", 20), bg="#90DFD6")
-temp_high_rs = Label(text="", width=20, font=("bold", 20), bg="#90DFD6")
-
-temp_low = Label(text="Temp(low) :", width=20, font=("bold", 20), bg="#90DFD6")
-temp_low_rs = Label(text="", width=20, font=("bold", 20), bg="#90DFD6")
-# pressure label and fetched data
-pres = Label(text="Pressure :", width=20, font=("bold", 20), bg="#90DFD6")
-pres_rs = Label(text="", width=20, font=("bold", 20), bg="#90DFD6")
-# humidity label and data
-hum = Label(text="Humidity :", width=20, font=("bold", 20), bg="#90DFD6")
-hum_rs = Label(text="", width=20, font=("bold", 20), bg="#90DFD6")
-
-# description
-desc = Label(text="Description :", width=20, font=("bold", 20), bg="#90DFD6")
-des_rs = Label(text="", width=20, font=("bold", 20), bg="#90DFD6")
-# country
-coun = Label(text="Country :", width=20, font=("bold", 20), bg="#90DFD6")
-coun_rs = Label(text="", width=20, font=("bold", 20), bg="#90DFD6")
-
-footer_1 = Label(text="Temperature is measured in Degrees Celsius", bg="#90DFD6")
-footer_2 = Label(text="Pressure in Pascals (Pa)", bg="#90DFD6")
-footer_3 = Label(
-    text="Humidity is measured in grams Per Kilogram of air(g/Kg)", bg="#90DFD6"
-)
-
-
 # Create widgets
 daily_label = Label(app, text="Daily:")
 hourly_label = Label(app, text="Hourly:")
 # file_entry = Entry(app)
+icon_label = Label(app, image=PhotoImage(file="04d.png"))
 get_weather_button = Button(
     app, text="Display Hourly Weather", command=display_hourly_weather
 )
+
 hourly_text_box = Text(app, width=40, height=5)
 daily_text_box = Text(app, width=40, height=5)
+result_label = Label(app, fg="red")
+
+box_img = ImageTk.PhotoImage(file="E:\Code\Python\Sketch\WeatherApp\Images\\box.png")
+base_img = ImageTk.PhotoImage(file="E:\Code\Python\Sketch\WeatherApp\Images\\base.png")
+weather_sector = Label(image=box_img, border=0)
+base_sector = Label(image=box_img,border=0)
+
+frame = Frame(app,width=900, height=155,bg="#212120")
+
+weat_data = read_data(file_name)
+
+temperature = int(weat_data['current']['temp']) - 273.15
+temp = Label()
+
+feels_like = int(weat_data['current']['feels_like']) - 273.15
+feels = Label()
+
+humidity = weat_data['current']['humidity']
+humid = Label()
+
+description = weat_data['current']['weather'][0]['description']
+descript = Label()
+
 
 # Place widgets on the window------------------
-# file_label.pack()
+daily_label.place(x=398,y=80)
+daily_text_box.place(x=399, y=100)
+
+hourly_label.place(x=398,y=190)
+hourly_text_box.place(x=399, y=210)
 # file_entry.pack()
 # get_weather_button.pack()
 display_hourly_weather()
 display_daily_weather()
 
-daily_label.place(x=398,y = 80)
-daily_text_box.place(x=399, y=100)
 
-hourly_label.place(x=398,y = 190)
-hourly_text_box.place(x=399, y=210)
+
+display_icon("10d")
+# icon_label.pack()
+weather_sector.place(x=40, y=120)
+
+frame.pack(side='bottom')
 # result_text.grid(column=5)
+
 
 # Start the Tkinter main loop------------------
 app.mainloop()
