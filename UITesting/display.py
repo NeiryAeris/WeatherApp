@@ -84,7 +84,7 @@ def close_app():
 # Create the main application window
 app = Tk()
 app.title("Hourly Weather App")
-app.geometry("890x470+300+300")
+app.geometry("890x470")
 app.configure(bg="#57ADFF")
 app.resizable(False, False)
 
@@ -117,17 +117,16 @@ weather_sector = Label(image=box_img, border=0)
 base_sector = Label(image=box_img, border=0)
 
 
-frame = Frame(app, width=900, height=155, bg="#212120")
+frame = Frame(app, width=890, height=155, bg="#212120")
 
 big_img = ImageTk.PhotoImage(file="Images\\main.png")
-main_sector = Label(frame, image=big_img, border=0)
+main_sector = Label(frame, image=big_img, border=1)
 sub_img = ImageTk.PhotoImage(file="Images\\sub.png")
 sub1_sector = Label(frame, image=sub_img, border=1)
 sub2_sector = Label(frame, image=sub_img, border=1)
 sub3_sector = Label(frame, image=sub_img, border=1)
 sub4_sector = Label(frame, image=sub_img, border=1)
 sub5_sector = Label(frame, image=sub_img, border=1)
-sub6_sector = Label(frame, image=sub_img, border=1)
 
 
 weat_data = read_data(file_name)
@@ -181,12 +180,11 @@ weather_sector.place(x=40, y=120)
 
 frame.place(x=0,y=320)
 main_sector.place(x=10, y=10)
-sub1_sector.place(x=280,y=10)
-sub2_sector.place(x=420,y=10)
-sub3_sector.place(x=560,y=10)
-sub4_sector.place(x=700,y=10)
-sub5_sector.place(x=840,y=10)
-sub6_sector.place(x=980,y=10)
+sub1_sector.place(x=250,y=10)
+sub2_sector.place(x=380,y=10)
+sub3_sector.place(x=510,y=10)
+sub4_sector.place(x=640,y=10)
+sub5_sector.place(x=770,y=10)
 # result_text.grid(column=5)
 
 
