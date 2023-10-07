@@ -37,20 +37,20 @@ def display_daily_weather():
         daily_text_box.insert(END, "File not found or invalid JSON data.")
 
 
-def display_hourly_weather():
-    weather = read_data(file_name)
-    hourly_weather = weather["hourly"]
-    if hourly_weather:
-        hourly_text_box.delete(1.0, END)
-        for entry in hourly_weather:
-            time = str(datetime.datetime.fromtimestamp(entry["dt"]))
-            hourly_text_box.insert(
-                END,
-                f"{time[5:]}: {str(int(entry['temp'] - 273.15))[:4]}°C, {entry['weather'][0]['description']}\n",
-            )
-    else:
-        hourly_text_box.delete(1.0, END)
-        hourly_text_box.insert(END, "File not found or invalid JSON data.")
+# def display_hourly_weather():
+#     weather = read_data(file_name)
+#     hourly_weather = weather["hourly"]
+#     if hourly_weather:
+#         hourly_text_box.delete(1.0, END)
+#         for entry in hourly_weather:
+#             time = str(datetime.datetime.fromtimestamp(entry["dt"]))
+#             hourly_text_box.insert(
+#                 END,
+#                 f"{time[5:]}: {str(int(entry['temp'] - 273.15))[:4]}°C, {entry['weather'][0]['description']}\n",
+#             )
+#     else:
+#         hourly_text_box.delete(1.0, END)
+#         hourly_text_box.insert(END, "File not found or invalid JSON data.")
 
 
 def display_icon(icon_id):
@@ -88,6 +88,23 @@ app.geometry("890x470")
 app.configure(bg="#57ADFF")
 app.resizable(False, False)
 
+##search box
+
+search_image=PhotoImage(file="images/Rounded Rectangle 3.png")
+search_box=Label(image=search_image, bg="#57adff")
+search_box.place(x=150,y=30)
+#textfield
+textfield = tkinter.Entry(search_box, justify='center', width=15, font=('poppins',25,'bold'), bg='#203243', border=0,fg='white')
+textfield.place(x=20,y=10)
+textfield.focus()
+#weat_image
+weat_image = PhotoImage(file="images/Layer 7.png")
+Label(search_box, image=weat_image, bg="#203243").place(x=15,y=5)
+#search_icon
+search_icon = PhotoImage(file="images/Layer 6.png")
+search_button=Button(search_box,image=search_icon, borderwidth=0,cursor="hand2",bg="#203243")
+search_button.place(x=370,y=5)
+
 # Menu bar testing
 
 menubar = Menu(app)
@@ -104,7 +121,7 @@ hourly_label = Label(app, text="Hourly:")
 # file_entry = Entry(app)
 icon_label = Label(app, image=PhotoImage(file="04d.png"))
 get_weather_button = Button(
-    app, text="Display Hourly Weather", command=display_hourly_weather
+    app, text="Display Hourly Weather"
 )
 
 hourly_text_box = Text(app, width=40, height=5)
@@ -168,11 +185,10 @@ descript.place(x=42, y=200)
 daily_label.place(x=398, y=80)
 daily_text_box.place(x=399, y=100)
 
-hourly_label.place(x=398, y=190)
-hourly_text_box.place(x=399, y=210)
+# hourly_label.place(x=398, y=190)
+# hourly_text_box.place(x=399, y=210)
 # file_entry.pack()
 # get_weather_button.pack()
-display_hourly_weather()
 display_daily_weather()
 
 # icon_label.pack()
