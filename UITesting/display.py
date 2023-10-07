@@ -111,50 +111,82 @@ hourly_text_box = Text(app, width=40, height=5)
 daily_text_box = Text(app, width=40, height=5)
 result_label = Label(app, fg="red")
 
-box_img = ImageTk.PhotoImage(file="E:\Code\Python\Sketch\WeatherApp\Images\\box.png")
-base_img = ImageTk.PhotoImage(file="E:\Code\Python\Sketch\WeatherApp\Images\\base.png")
+box_img = ImageTk.PhotoImage(file="Images\\box.png")
+base_img = ImageTk.PhotoImage(file="Images\\base.png")
 weather_sector = Label(image=box_img, border=0)
-base_sector = Label(image=box_img,border=0)
+base_sector = Label(image=box_img, border=0)
 
-frame = Frame(app,width=900, height=155,bg="#212120")
+
+frame = Frame(app, width=900, height=155, bg="#212120")
+
+big_img = ImageTk.PhotoImage(file="Images\\main.png")
+main_sector = Label(frame, image=big_img, border=0)
+sub_img = ImageTk.PhotoImage(file="Images\\sub.png")
+sub1_sector = Label(frame, image=sub_img, border=1)
+sub2_sector = Label(frame, image=sub_img, border=1)
+sub3_sector = Label(frame, image=sub_img, border=1)
+sub4_sector = Label(frame, image=sub_img, border=1)
+sub5_sector = Label(frame, image=sub_img, border=1)
+sub6_sector = Label(frame, image=sub_img, border=1)
+
 
 weat_data = read_data(file_name)
 
-temperature = int(weat_data['current']['temp']) - 273.15
-temp = Label(app, text=f"Temperature: {str(temperature)[:4]}°C",bg="#203243",fg='white',font='Helvetica')
-temp.place(x=42,y=130)
+temperature = int(weat_data["current"]["temp"]) - 273.15
+temp = Label(
+    app,
+    text=f"Temperature: {str(temperature)[:4]}°C",
+    bg="#203243",
+    fg="white",
+    font=("Helvetica",10)
+)
+temp.place(x=42, y=125)
 
-feels_like = int(weat_data['current']['feels_like']) - 273.15
-feels = Label(app, text=f"Feels like: {str(feels_like)[:4]}°C",bg="#203243",fg='white',font='Helvetica')
-feels.place(x=42,y=150)
+feels_like = int(weat_data["current"]["feels_like"]) - 273.15
+feels = Label(
+    app,
+    text=f"Feels like: {str(feels_like)[:4]}°C",
+    bg="#203243",
+    fg="white",
+    font=("Helvetica",10)
+)
+feels.place(x=42, y=150)
 
-humidity = weat_data['current']['humidity']
-humid = Label(app, text=f"Humidity: {humidity}%",bg="#203243",fg='white',font='Helvetica')
-humid.place(x=42,y=170)
+humidity = weat_data["current"]["humidity"]
+humid = Label(
+    app, text=f"Humidity: {humidity}%", bg="#203243", fg="white", font=("Helvetica",10)
+)
+humid.place(x=42, y=175)
 
-description = weat_data['current']['weather'][0]['description']
-descript = Label(app, text=f"Overall: {description}",bg="#203243",fg='white',font='Helvetica')
-descript.place(x=42,y=190)
+description = weat_data["current"]["weather"][0]["description"]
+descript = Label(
+    app, text=f"Overall: {description}", bg="#203243", fg="white", font=("Helvetica",10)
+)
+descript.place(x=42, y=200)
 
 
 # Place widgets on the window------------------
-daily_label.place(x=398,y=80)
+daily_label.place(x=398, y=80)
 daily_text_box.place(x=399, y=100)
 
-hourly_label.place(x=398,y=190)
+hourly_label.place(x=398, y=190)
 hourly_text_box.place(x=399, y=210)
 # file_entry.pack()
 # get_weather_button.pack()
 display_hourly_weather()
 display_daily_weather()
 
-
-
-display_icon("10d")
 # icon_label.pack()
 weather_sector.place(x=40, y=120)
 
-frame.pack(side='bottom')
+frame.place(x=0,y=320)
+main_sector.place(x=10, y=10)
+sub1_sector.place(x=280,y=10)
+sub2_sector.place(x=420,y=10)
+sub3_sector.place(x=560,y=10)
+sub4_sector.place(x=700,y=10)
+sub5_sector.place(x=840,y=10)
+sub6_sector.place(x=980,y=10)
 # result_text.grid(column=5)
 
 
