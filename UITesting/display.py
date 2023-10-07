@@ -136,6 +136,7 @@ base_sector = Label(image=box_img, border=0)
 
 frame = Frame(app, width=890, height=155, bg="#212120")
 
+rain_bg = PhotoImage(file="Images\\rain_weather.jpg")
 big_img = ImageTk.PhotoImage(file="Images\\main.png")
 main_sector = Label(frame, image=big_img, border=1)
 sub_img = ImageTk.PhotoImage(file="Images\\sub.png")
