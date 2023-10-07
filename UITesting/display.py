@@ -119,7 +119,7 @@ base_sector = Label(image=box_img, border=0)
 
 frame = Frame(app, width=890, height=155, bg="#212120")
 
-rain_bg = PhotoImage(file="Images\\rain_weather.jpg")
+rain_bg = ImageTk.PhotoImage(file="Images\\rain_weather.png")
 big_img = ImageTk.PhotoImage(file="Images\\main.png")
 main_sector = Label(frame, image=big_img, border=1)
 sub_img = ImageTk.PhotoImage(file="Images\\sub.png")
@@ -164,8 +164,8 @@ descript = Label(
 )
 descript.place(x=42, y=200)
 
-
 # Place widgets on the window------------------
+
 daily_label.place(x=398, y=80)
 daily_text_box.place(x=399, y=100)
 
