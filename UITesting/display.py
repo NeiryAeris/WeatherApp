@@ -85,8 +85,13 @@ def close_app():
 app = Tk()
 app.title("Hourly Weather App")
 app.geometry("890x470")
-app.configure(bg="#57ADFF")
+# app.configure(bg="#57ADFF")
 app.resizable(False, False)
+
+rain_bg = ImageTk.PhotoImage(file="Images\\rain_weather.png")
+background_label = Label(app, image=rain_bg)
+background_label.place(relwidth=1, relheight=1)
+background_label.place(x=0,y=0)
 
 # Menu bar testing
 
@@ -165,7 +170,6 @@ descript = Label(
 descript.place(x=42, y=200)
 
 # Place widgets on the window------------------
-
 daily_label.place(x=398, y=80)
 daily_text_box.place(x=399, y=100)
 
