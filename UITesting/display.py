@@ -88,11 +88,28 @@ app.geometry("890x470")
 # app.configure(bg="#57ADFF")
 app.resizable(False, False)
 
-rain_bg = ImageTk.PhotoImage(file="Images\\rain_weather.png")
-background_label = Label(app, image=rain_bg)
-background_label.place(relwidth=1, relheight=1)
-background_label.place(x=0,y=0)
+thunder_skies_bg = ImageTk.PhotoImage(file="Images\\thunder.png")
+clear_skies_bg = ImageTk.PhotoImage(file="Images\\clear_skies.png")
+rain_skies_bg = ImageTk.PhotoImage(file="Images\\rain_weather.png")
 
+canvas = Canvas(app, width=890, height=470)
+canvas.place(x=0,y=0)
+canvas.create_image(0, 0, anchor=NW, image=rain_skies_bg)
+
+# background_label = Label(app, image=rain_skies_bg)
+# background_label.place(relwidth=1, relheight=1)
+# background_label.place(x=0,y=0)
+
+# Search box
+imaget = Image.open("images\Rounded Rectangle 3.png")
+search_image=ImageTk.PhotoImage(imaget)
+canvas.create_image(250, 30, anchor=NW, image=search_image)
+
+textfield = tkinter.Entry(canvas, justify='center', width=15, font=('poppins',25,'bold'), bg='#203243', border=0,fg='white')
+textfield.place(x=20,y=10)
+textfield.focus()
+
+canvas.config(highlightthickness=0)# This is to eleminate the canvas border
 # Menu bar testing
 
 menubar = Menu(app)
@@ -124,7 +141,6 @@ base_sector = Label(image=box_img, border=0)
 
 frame = Frame(app, width=890, height=155, bg="#212120")
 
-rain_bg = ImageTk.PhotoImage(file="Images\\rain_weather.png")
 big_img = ImageTk.PhotoImage(file="Images\\main.png")
 main_sector = Label(frame, image=big_img, border=1)
 sub_img = ImageTk.PhotoImage(file="Images\\sub.png")
