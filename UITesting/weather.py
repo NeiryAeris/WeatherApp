@@ -6,7 +6,7 @@ from io import BytesIO
 from PIL import Image, ImageTk
 import requests
 from subprocess import call
-
+import OpenWeatherAPI
 file_name = "data.json"
 
 def read_data(file_name):
@@ -18,7 +18,6 @@ def read_data(file_name):
         return f"File '{file_name}' not found."
     except Exception as e:
         return f"An error occurred: {str(e)}"
-
 
 def display_daily_weather():
     weather = read_data(file_name)
@@ -54,7 +53,6 @@ def display_icon(icon_id):
         )
         icon_label.config(image=error_img)
 
-
 def close_app():
     closeapp = tkinter.messagebox.askyesno(
         "Do you want to exit App?", "The app is still in development tho"
@@ -65,11 +63,7 @@ def close_app():
 
 def get_update():
     city=textfield.get()
-    f = open("UITesting/cityname.txt", "w")
-    f.write(city)
-    f.close()
-    call(["python","OpenWeather/CityLocation.py"])
-    call(["python","OpenWeather/OpenWeatherAPI.py"])
+    OpenWeatherAPI.get_data(city)
     reload()
     
     
@@ -81,12 +75,23 @@ app.configure(bg="#57ADFF")
 app.resizable(False, False)
 reload=False
 
+thunder_skies_bg = ImageTk.PhotoImage(file="Images\\thunder.png")
+clear_skies_bg = ImageTk.PhotoImage(file="Images\\clear_skies.png")
+rain_skies_bg = ImageTk.PhotoImage(file="Images\\rain_weather.png")
+
+canvas = Canvas(app, width=890, height=470)
+canvas.place(x=0,y=0)
+canvas.create_image(0, 0, anchor=NW, image=rain_skies_bg)
+
+canvas.config(highlightthickness=0)
+
 ##search box
+
 search_image=PhotoImage(file="images/Rounded Rectangle 3.png")
 search_box=Label(image=search_image, bg="#57adff")
 search_box.place(x=230,y=30)
 #textfield
-textfield = tkinter.Entry(search_box, justify='left', width=15, font=('poppins',25,'bold'), bg='#203243', border=0,fg='white')
+textfield = Entry(search_box, justify='left', width=15, font=('poppins',25,'bold'), bg='#203243', border=0,fg='white')
 textfield.place(x=90,y=10)
 textfield.focus()
 #weat_image
@@ -131,8 +136,6 @@ base_sector = Label(image=box_img, border=0)
 
 
 frame = Frame(app, width=890, height=155, bg="#212120")
-
-rain_bg = ImageTk.PhotoImage(file="Images\\rain_weather.png")
 
 big_img = ImageTk.PhotoImage(file="Images\\main.png")
 main_sector = Label(frame, image=big_img, border=1)
@@ -182,18 +185,19 @@ def reload():
     #end weather sector
     
     #start main_sector
+    
     temperature = int(weat_data["current"]["temp"]) - 273.15
     temp = Label( main_sector, text=f"Temperature: {str(temperature)[:4]}°C", bg="#203243", fg="white", font=("Helvetica",10) )
-    temp.place(x=10, y=10)
+    temp.place(x=55, y=10)
     feels_like = int(weat_data["current"]["feels_like"]) - 273.15 
     feels = Label( main_sector, text=f"Feels like: {str(feels_like)[:4]}°C", bg="#203243", fg="white", font=("Helvetica",10) )
-    feels.place(x=10, y=30)
+    feels.place(x=55, y=30)
     humidity = weat_data["current"]["humidity"]
     humid = Label( main_sector, text=f"Humidity: {humidity}%", bg="#203243", fg="white", font=("Helvetica",10) )
-    humid.place(x=10, y=50)
+    humid.place(x=55, y=50)
     description = weat_data["current"]["weather"][0]["description"]
     descript = Label( main_sector, text=f"Overall: {description}", bg="#203243", fg="white", font=("Helvetica",10) )
-    descript.place(x=10, y=70)
+    descript.place(x=55, y=70)
     #end main_sector
     
     #start sub1_sector

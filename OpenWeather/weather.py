@@ -1,15 +1,13 @@
 from tkinter import *
+import urllib.request
 import tkinter.messagebox
 import datetime
 import json
 from io import BytesIO
 from PIL import Image, ImageTk
 import requests
-from dotenv import load_dotenv
+from subprocess import call
 import OpenWeatherAPI
-
-load_dotenv()
-
 file_name = "data.json"
 
 def read_data(file_name):
@@ -21,7 +19,6 @@ def read_data(file_name):
         return f"File '{file_name}' not found."
     except Exception as e:
         return f"An error occurred: {str(e)}"
-
 
 def display_daily_weather():
     weather = read_data(file_name)
@@ -57,7 +54,6 @@ def display_icon(icon_id):
         )
         icon_label.config(image=error_img)
 
-
 def close_app():
     closeapp = tkinter.messagebox.askyesno(
         "Do you want to exit App?", "The app is still in development tho"
@@ -78,13 +74,25 @@ app.title("Hourly Weather App")
 app.geometry("890x470")
 app.configure(bg="#57ADFF")
 app.resizable(False, False)
+reload=False
+
+thunder_skies_bg = ImageTk.PhotoImage(file="Images\\thunder.png")
+clear_skies_bg = ImageTk.PhotoImage(file="Images\\clear_skies.png")
+rain_skies_bg = ImageTk.PhotoImage(file="Images\\rain_weather.png")
+
+canvas = Canvas(app, width=890, height=470)
+canvas.place(x=0,y=0)
+canvas.create_image(0, 0, anchor=NW, image=rain_skies_bg)
+
+canvas.config(highlightthickness=0)
 
 ##search box
+
 search_image=PhotoImage(file="images/Rounded Rectangle 3.png")
 search_box=Label(image=search_image, bg="#57adff")
 search_box.place(x=230,y=30)
 #textfield
-textfield = tkinter.Entry(search_box, justify='left', width=15, font=('poppins',25,'bold'), bg='#203243', border=0,fg='white')
+textfield = Entry(search_box, justify='left', width=15, font=('poppins',25,'bold'), bg='#203243', border=0,fg='white')
 textfield.place(x=90,y=10)
 textfield.focus()
 #weat_image
@@ -114,6 +122,9 @@ daily_label = Label(app, text="Daily:")
 hourly_label = Label(app, text="Hourly:")
 # file_entry = Entry(app)
 icon_label = Label(app, image=PhotoImage(file="04d.png"))
+get_weather_button = Button(
+    app, text="Display Hourly Weather"
+)
 
 hourly_text_box = Text(app, width=40, height=5)
 daily_text_box = Text(app, width=40, height=5)
@@ -127,8 +138,6 @@ base_sector = Label(image=box_img, border=0)
 
 frame = Frame(app, width=890, height=155, bg="#212120")
 
-rain_bg = ImageTk.PhotoImage(file="Images\\rain_weather.png")
-
 big_img = ImageTk.PhotoImage(file="Images\\main.png")
 main_sector = Label(frame, image=big_img, border=1)
 sub_img = ImageTk.PhotoImage(file="Images\\sub.png")
@@ -139,6 +148,14 @@ sub4_sector = Label(frame, image=sub_img, border=1)
 sub5_sector = Label(frame, image=sub_img, border=1)
 
 # Place widgets on the window------------------
+# daily_label.place(x=398, y=80)
+# daily_text_box.place(x=399, y=100)
+
+# hourly_label.place(x=398, y=190)
+# hourly_text_box.place(x=399, y=210)
+# file_entry.pack()
+# get_weather_button.pack()
+display_daily_weather()
 
 # icon_label.pack()
 weather_sector.place(x=40, y=120)
@@ -169,24 +186,44 @@ def reload():
     #end weather sector
     
     #start main_sector
+    global main_icon
+    main_sect_icon_id = weat_data["current"]["weather"][0]["icon"]
+    main_sect_icon_url = f"http://openweathermap.org/img/w/{main_sect_icon_id}.png"
+    urllib.request.urlretrieve(main_sect_icon_url, f"{main_sect_icon_id}.png")
+    main_sect_img = Image.open(f"{main_sect_icon_id}.png")
+    main_icon = main_sect_img.resize((50, 50))
+    main_icon = ImageTk.PhotoImage(main_icon)
+    main_sect_icon = Label(main_sector,image=main_icon,bg="#203243")
+    main_sect_icon.place(x=0,y=40)
+    
     temperature = int(weat_data["current"]["temp"]) - 273.15
     temp = Label( main_sector, text=f"Temperature: {str(temperature)[:4]}°C", bg="#203243", fg="white", font=("Helvetica",10) )
-    temp.place(x=10, y=10)
+    temp.place(x=25, y=10)
     feels_like = int(weat_data["current"]["feels_like"]) - 273.15 
     feels = Label( main_sector, text=f"Feels like: {str(feels_like)[:4]}°C", bg="#203243", fg="white", font=("Helvetica",10) )
-    feels.place(x=10, y=30)
+    feels.place(x=55, y=40)
     humidity = weat_data["current"]["humidity"]
     humid = Label( main_sector, text=f"Humidity: {humidity}%", bg="#203243", fg="white", font=("Helvetica",10) )
-    humid.place(x=10, y=50)
+    humid.place(x=55, y=60)
     description = weat_data["current"]["weather"][0]["description"]
     descript = Label( main_sector, text=f"Overall: {description}", bg="#203243", fg="white", font=("Helvetica",10) )
-    descript.place(x=10, y=70)
+    descript.place(x=25, y=90)
     #end main_sector
     
     #start sub1_sector
+    global sub1_icon
+    sub1_sect_icon_id = weat_data["daily"][0]["weather"][0]["icon"]
+    sub1_sect_icon_url = f"http://openweathermap.org/img/w/{sub1_sect_icon_id}.png"
+    urllib.request.urlretrieve(sub1_sect_icon_url, f"{sub1_sect_icon_id}.png")
+    sub1_sect_img = Image.open(f"{sub1_sect_icon_id}.png")
+    sub1_icon = sub1_sect_img.resize((50, 50))
+    sub1_icon = ImageTk.PhotoImage(sub1_icon)
+    sub1_sect_icon = Label(sub1_sector,image=sub1_icon,bg="#203243")
+    sub1_sect_icon.place(x=20,y=15)
+    
     dt=str(datetime.datetime.fromtimestamp(weat_data["daily"][0]["dt"]))
     date_time=dt[8:10]+'-'+dt[5:7]
-    time=Label(sub1_sector, text=date_time,  bg="#203243", fg="white", font=("Helvetica",10,'bold')).place(x=20,y=5)
+    time=Label(sub1_sector, text=date_time,  bg="#203243", fg="white", font=("Helvetica",10,'bold')).place(x=25,y=5)
     temperature = int(weat_data["daily"][0]["temp"]['day']) - 273.15
     temp = Label( sub1_sector, text=f"Temp: {str(temperature)[:4]}°C", bg="#203243", fg="white", font=("Helvetica",10) ) 
     temp.place(x=0, y=60)
@@ -199,9 +236,19 @@ def reload():
     #end sub1_sector 
     
     #start sub2_sector
+    global sub2_icon
+    sub2_sect_icon_id = weat_data["daily"][1]["weather"][0]["icon"]
+    sub2_sect_icon_url = f"http://openweathermap.org/img/w/{sub2_sect_icon_id}.png"
+    urllib.request.urlretrieve(sub2_sect_icon_url, f"{sub2_sect_icon_id}.png")
+    sub2_sect_img = Image.open(f"{sub2_sect_icon_id}.png")
+    sub2_icon = sub2_sect_img.resize((50, 50))
+    sub2_icon = ImageTk.PhotoImage(sub2_icon)
+    sub2_sect_icon = Label(sub2_sector,image=sub2_icon,bg="#203243")
+    sub2_sect_icon.place(x=20,y=15)
+    
     dt=str(datetime.datetime.fromtimestamp(weat_data["daily"][1]["dt"]))
     date_time=dt[8:10]+'-'+dt[5:7]
-    time=Label(sub2_sector, text=date_time,  bg="#203243", fg="white", font=("Helvetica",10,'bold')).place(x=20,y=5)
+    time=Label(sub2_sector, text=date_time,  bg="#203243", fg="white", font=("Helvetica",10,'bold')).place(x=25,y=5)
     temperature = int(weat_data["daily"][1]["temp"]['day']) - 273.15
     temp = Label(sub2_sector, text=f"Temp: {str(temperature)[:4]}°C", bg="#203243", fg="white", font=("Helvetica",10) )
     temp.place(x=0, y=60)
@@ -214,9 +261,19 @@ def reload():
     #end sub2_sector
     
     #start sub3_sector
+    global sub3_icon
+    sub3_sect_icon_id = weat_data["daily"][2]["weather"][0]["icon"]
+    sub3_sect_icon_url = f"http://openweathermap.org/img/w/{sub3_sect_icon_id}.png"
+    urllib.request.urlretrieve(sub3_sect_icon_url, f"{sub3_sect_icon_id}.png")
+    sub3_sect_img = Image.open(f"{sub3_sect_icon_id}.png")
+    sub3_icon = sub3_sect_img.resize((50, 50))
+    sub3_icon = ImageTk.PhotoImage(sub3_icon)
+    sub3_sect_icon = Label(sub3_sector,image=sub3_icon,bg="#203243")
+    sub3_sect_icon.place(x=20,y=15)
+    
     dt=str(datetime.datetime.fromtimestamp(weat_data["daily"][2]["dt"]))
     date_time=dt[8:10]+'-'+dt[5:7]
-    time=Label(sub3_sector, text=date_time,  bg="#203243", fg="white", font=("Helvetica",10,'bold')).place(x=20,y=5)
+    time=Label(sub3_sector, text=date_time,  bg="#203243", fg="white", font=("Helvetica",10,'bold')).place(x=25,y=5)
     temperature = int(weat_data["daily"][2]["temp"]['day']) - 273.15
     temp = Label( sub3_sector, text=f"Temp: {str(temperature)[:4]}°C", bg="#203243", fg="white", font=("Helvetica",10) )
     temp.place(x=0, y=60)
@@ -229,9 +286,19 @@ def reload():
     #end sub3_sector
     
     #start sub4_sector
+    global sub4_icon
+    sub4_sect_icon_id = weat_data["daily"][3]["weather"][0]["icon"]
+    sub4_sect_icon_url = f"http://openweathermap.org/img/w/{sub4_sect_icon_id}.png"
+    urllib.request.urlretrieve(sub4_sect_icon_url, f"{sub4_sect_icon_id}.png")
+    sub4_sect_img = Image.open(f"{sub4_sect_icon_id}.png")
+    sub4_icon = sub4_sect_img.resize((50, 50))
+    sub4_icon = ImageTk.PhotoImage(sub4_icon)
+    sub4_sect_icon = Label(sub4_sector,image=sub4_icon,bg="#203243")
+    sub4_sect_icon.place(x=20,y=15)
+    
     dt=str(datetime.datetime.fromtimestamp(weat_data["daily"][3]["dt"]))
     date_time=dt[8:10]+'-'+dt[5:7]
-    time=Label(sub4_sector, text=date_time,  bg="#203243", fg="white", font=("Helvetica",10,'bold')).place(x=20,y=5)
+    time=Label(sub4_sector, text=date_time,  bg="#203243", fg="white", font=("Helvetica",10,'bold')).place(x=25,y=5)
     temperature = int(weat_data["daily"][3]["temp"]['day']) - 273.15
     temp = Label( sub4_sector, text=f"Temp: {str(temperature)[:4]}°C", bg="#203243", fg="white", font=("Helvetica",10) )
     temp.place(x=0, y=60)
@@ -244,9 +311,19 @@ def reload():
     #end sub4_sector
     
     #start sub5_sector
+    global sub5_icon
+    sub5_sect_icon_id = weat_data["daily"][3]["weather"][0]["icon"]
+    sub5_sect_icon_url = f"http://openweathermap.org/img/w/{sub5_sect_icon_id}.png"
+    urllib.request.urlretrieve(sub5_sect_icon_url, f"{sub5_sect_icon_id}.png")
+    sub5_sect_img = Image.open(f"{sub5_sect_icon_id}.png")
+    sub5_icon = sub5_sect_img.resize((50, 50))
+    sub5_icon = ImageTk.PhotoImage(sub5_icon)
+    sub5_sect_icon = Label(sub5_sector,image=sub5_icon,bg="#203243")
+    sub5_sect_icon.place(x=20,y=15)
+    
     dt=str(datetime.datetime.fromtimestamp(weat_data["daily"][4]["dt"]))
     date_time=dt[8:10]+'-'+dt[5:7]
-    time=Label(sub5_sector, text=date_time,  bg="#203243", fg="white", font=("Helvetica",10,'bold')).place(x=20,y=5)
+    time=Label(sub5_sector, text=date_time,  bg="#203243", fg="white", font=("Helvetica",10,'bold')).place(x=25,y=5)
     temperature = int(weat_data["daily"][4]["temp"]['day']) - 273.15
     temp = Label( sub5_sector, text=f"Temp: {str(temperature)[:4]}°C", bg="#203243", fg="white", font=("Helvetica",10))
     temp.place(x=0, y=60)
