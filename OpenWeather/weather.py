@@ -20,39 +20,39 @@ def read_data(file_name):
     except Exception as e:
         return f"An error occurred: {str(e)}"
 
-def display_daily_weather():
-    weather = read_data(file_name)
-    daily_weather = weather["daily"]
-    if daily_weather:
-        daily_text_box.delete(1.0, END)
-        for entry in daily_weather:
-            time = str(datetime.datetime.fromtimestamp(entry["dt"]))
-            daily_text_box.insert(
-                END,
-                f"{time[5:]}: {str(int(entry['temp']['day'] - 273.15))[:4]}°C, {entry['weather'][0]['description']}\n",
-            )
+# def display_daily_weather():
+#     weather = read_data(file_name)
+#     daily_weather = weather["daily"]
+#     if daily_weather:
+#         daily_text_box.delete(1.0, END)
+#         for entry in daily_weather:
+#             time = str(datetime.datetime.fromtimestamp(entry["dt"]))
+#             daily_text_box.insert(
+#                 END,
+#                 f"{time[5:]}: {str(int(entry['temp']['day'] - 273.15))[:4]}°C, {entry['weather'][0]['description']}\n",
+#             )
 
-    else:
-        daily_text_box.delete(1.0, END)
-        daily_text_box.insert(END, "File not found or invalid JSON data.")
+#     else:
+#         daily_text_box.delete(1.0, END)
+#         daily_text_box.insert(END, "File not found or invalid JSON data.")
 
-def display_icon(icon_id):
-    url = f"https://openweathermap.org/img/w/{icon_id}.png"
-    try:
-        response = requests.get(url)
-        icon_data = response.content
-        icon = Image.open(BytesIO(icon_data))
-        icon = icon.resize((60, 60))  # Adjust the size as needed
-        icon = ImageTk.PhotoImage(icon)
+# def display_icon(icon_id):
+#     url = f"https://openweathermap.org/img/w/{icon_id}.png"
+#     try:
+#         response = requests.get(url)
+#         icon_data = response.content
+#         icon = Image.open(BytesIO(icon_data))
+#         icon = icon.resize((60, 60))  # Adjust the size as needed
+#         icon = ImageTk.PhotoImage(icon)
 
-        # Display the icon in a Label widget
-        icon_label.config(image=icon, bg="#57ADFF")
-        icon_label.image = icon  # Keep a reference to prevent garbage collection
-    except Exception as e:
-        error_img = ImageTk.PhotoImage(
-            file="E:\Code\Python\Sketch\WeatherApp\error.png"
-        )
-        icon_label.config(image=error_img)
+#         # Display the icon in a Label widget
+#         icon_label.config(image=icon, bg="#57ADFF")
+#         icon_label.image = icon  # Keep a reference to prevent garbage collection
+#     except Exception as e:
+#         error_img = ImageTk.PhotoImage(
+#             file="E:\Code\Python\Sketch\WeatherApp\error.png"
+#         )
+#         icon_label.config(image=error_img)
 
 def close_app():
     closeapp = tkinter.messagebox.askyesno(
@@ -101,7 +101,7 @@ Label(search_box, image=weat_image, bg="#203243").place(x=15,y=5)
 # search_icon
 search_icon = PhotoImage(file="images/Layer 6.png")
 search_button=Button(search_box,image=search_icon, borderwidth=0,cursor="hand2",bg="#203243",command=get_update)
-search_button.place(x=370,y=5)
+search_button.place(x=375,y=3)
 #note
 note=Label(app, text="click search icon to update new weather", bg="#57ADFF", fg="white", font=("Helvetica",9)).place(x=320,y=95)
 
@@ -155,7 +155,7 @@ sub5_sector = Label(frame, image=sub_img, border=1)
 # hourly_text_box.place(x=399, y=210)
 # file_entry.pack()
 # get_weather_button.pack()
-display_daily_weather()
+# display_daily_weather()
 
 # icon_label.pack()
 weather_sector.place(x=40, y=120)
@@ -171,18 +171,28 @@ sub5_sector.place(x=770,y=10)
 def reload():
     weat_data = read_data(file_name)
     #weather_sector
+    global today_icon
+    today_sect_icon_id = weat_data["current"]["weather"][0]["icon"]
+    today_sect_icon_url = f"http://openweathermap.org/img/w/{today_sect_icon_id}.png"
+    urllib.request.urlretrieve(today_sect_icon_url, f"{today_sect_icon_id}.png")
+    today_sect_img = Image.open(f"{today_sect_icon_id}.png")
+    today_icon = today_sect_img.resize((70, 70))
+    today_icon = ImageTk.PhotoImage(today_icon)
+    today_sect_icon = Label(weather_sector,image=today_icon,bg="#203243")
+    today_sect_icon.place(x=10,y=40)
+    
     temperature = int(weat_data["current"]["temp"]) - 273.15
     temp = Label(weather_sector, text=f"Temperature: {str(temperature)[:4]}°C", bg="#203243", fg="white", font=("Helvetica",10))
-    temp.place(x=10, y=10)
+    temp.place(x=60, y=10+20)
     feels_like = int(weat_data["current"]["feels_like"]) - 273.15
     feels = Label(weather_sector, text=f"Feels like: {str(feels_like)[:4]}°C", bg="#203243", fg="white", font=("Helvetica",10))
-    feels.place(x=10, y=30)
+    feels.place(x=85, y=30+20)
     humidity = weat_data["current"]["humidity"]
     humid = Label(weather_sector, text=f"Humidity: {humidity}%", bg="#203243", fg="white", font=("Helvetica",10))
-    humid.place(x=10, y=50)
+    humid.place(x=85, y=50+20)
     description = weat_data["current"]["weather"][0]["description"]
     descript = Label(weather_sector, text=f"Overall: {description}", bg="#203243", fg="white", font=("Helvetica",10))
-    descript.place(x=10, y=70)
+    descript.place(x=60, y=70+20)
     #end weather sector
     
     #start main_sector
