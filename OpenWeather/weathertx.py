@@ -190,7 +190,7 @@ def get_hourly_weather():
     
     #start sub5_sector
     global sub5_icon
-    sub5_sect_icon_id = weat_data["hourly"][3]["weather"][0]["icon"]
+    sub5_sect_icon_id = weat_data["hourly"][4]["weather"][0]["icon"]
     sub5_sect_icon_url = f"http://openweathermap.org/img/w/{sub5_sect_icon_id}.png"
     urllib.request.urlretrieve(sub5_sect_icon_url, f"{sub5_sect_icon_id}.png")
     sub5_sect_img = Image.open(f"{sub5_sect_icon_id}.png")
@@ -215,14 +215,14 @@ def get_hourly_weather():
     
     #start sub6_sector
     global sub6_icon
-    sub6_sect_icon_id = weat_data["hourly"][3]["weather"][0]["icon"]
+    sub6_sect_icon_id = weat_data["hourly"][5]["weather"][0]["icon"]
     sub6_sect_icon_url = f"http://openweathermap.org/img/w/{sub6_sect_icon_id}.png"
-    urllib.request.urlretrieve(sub5_sect_icon_url, f"{sub6_sect_icon_id}.png")
-    sub5_sect_img = Image.open(f"{sub6_sect_icon_id}.png")
-    sub5_icon = sub5_sect_img.resize((50, 50))
-    sub5_icon = ImageTk.PhotoImage(sub5_icon)
-    sub5_sect_icon = Label(sub6_sector,image=sub5_icon,bg="#203243")
-    sub5_sect_icon.place(x=20,y=15)
+    urllib.request.urlretrieve(sub6_sect_icon_url, f"{sub6_sect_icon_id}.png")
+    sub6_sect_img = Image.open(f"{sub6_sect_icon_id}.png")
+    sub6_icon = sub6_sect_img.resize((50, 50))
+    sub6_icon = ImageTk.PhotoImage(sub6_icon)
+    sub6_sect_icon = Label(sub6_sector,image=sub6_icon,bg="#203243")
+    sub6_sect_icon.place(x=20,y=15)
     
     dt=str(datetime.datetime.fromtimestamp(weat_data["hourly"][5]["dt"]))
     date_time=dt[11:16]
