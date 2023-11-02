@@ -242,7 +242,7 @@ def get_hourly_weather():
 app = Tk()
 app.title("Hourly Weather App")
 app.geometry("890x470")
-app.configure(bg="#57ADFF")
+app.configure(bg="#4b4b4b")
 app.resizable(False, False)
 reload=False
 
@@ -259,7 +259,7 @@ rain_skies_bg = ImageTk.PhotoImage(file="Images\\rain_weather.png")
 ##search box
 
 search_image=PhotoImage(file="images/Rounded Rectangle 3.png")
-search_box=Label(image=search_image, bg="#57adff")
+search_box=Label(image=search_image, bg="#4b4b4b")
 search_box.place(x=230,y=30)
 #textfield
 textfield = Entry(search_box, justify='left', width=15, font=('poppins',25,'bold'), bg='#203243', border=0,fg='white')
@@ -273,7 +273,7 @@ search_icon = PhotoImage(file="images/Layer 6.png")
 search_button=Button(search_box,image=search_icon, borderwidth=0,cursor="hand2",bg="#203243",command=get_update)
 search_button.place(x=375,y=3)
 #note
-note=Label(app, text="click search icon to update new weather", bg="#57ADFF", fg="white", font=("Helvetica",9)).place(x=320,y=95)
+note=Label(app, text="click search icon to update new weather", bg="#4b4b4b", fg="white", font=("Helvetica",9)).place(x=320,y=95)
 
 
 
