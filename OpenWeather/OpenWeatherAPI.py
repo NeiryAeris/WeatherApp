@@ -21,4 +21,4 @@ def get_data(city_name):
     json_filename = "data.json"
     with open(json_filename, 'w') as json_file:
         json.dump(my_data, json_file, indent=4)
-    print(API_URL)
+        print(API_URL)
