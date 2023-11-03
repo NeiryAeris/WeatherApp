@@ -8,10 +8,11 @@ load_dotenv()
 
 # loc = Nominatim(user_agent="GetLoc")
 
-cityname = "hanoi"
+lat,lon = 10.7239,106.7313
+    
 limit = 1
 API_KEY = os.getenv('API_KEY')
-fetch_url = f"http://api.openweathermap.org/geo/1.0/direct?q={cityname}&limit={limit}&appid={API_KEY}"
+fetch_url = f"http://api.openweathermap.org/geo/1.0/reverse?lat={lat}&lon={lon}&limit={limit}&appid={API_KEY}"
 
 response = requests.get(fetch_url)
 

@@ -344,6 +344,9 @@ sub5_sector.place(x=770,y=10)
 
 def reload():
     weat_data = read_data(file_name)
+    location = read_data("location.json")
+    
+    
     #weather_sector
     global today_icon
     today_sect_icon_id = weat_data["current"]["weather"][0]["icon"]
@@ -354,6 +357,14 @@ def reload():
     today_icon = ImageTk.PhotoImage(today_icon)
     today_sect_icon = Label(weather_sector,image=today_icon,bg="#203243")
     today_sect_icon.place(x=10,y=40)
+    
+    region = Label(weather_sector, text=weat_data["timezone"], bg="#203243", fg="white", font=("Helvetica",10))
+    region.place(x=165, y= 5)
+    try:
+        city = Label(weather_sector, text=location[0]["name"], bg="#203243", fg="white", font=("Helvetica",10))
+        city.place(x=15, y= 5)
+    except:
+        pass
     
     temperature = int(weat_data["current"]["temp"]) - 273.15
     temp = Label(weather_sector, text=f"Temperature: {str(temperature)[:4]}°C", bg="#203243", fg="white", font=("Helvetica",10))

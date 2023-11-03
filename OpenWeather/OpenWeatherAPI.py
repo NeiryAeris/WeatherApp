@@ -22,3 +22,12 @@ def get_data(city_name):
     with open(json_filename, 'w') as json_file:
         json.dump(my_data, json_file, indent=4)
         print(API_URL)
+
+    limit = 1
+    fetch_url = f"http://api.openweathermap.org/geo/1.0/reverse?lat={lat}&lon={lon}&limit={limit}&appid={API_KEY}"
+    response = requests.get(fetch_url)
+    my_data = response.json()
+    json_filename = "location.json"
+    with open(json_filename, 'w') as json_file:
+            json.dump(my_data, json_file, indent=4)
+    # geolock = geolocator.reverse(lat,lon)
